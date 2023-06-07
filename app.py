@@ -121,11 +121,9 @@ def write_comment():
 @app.route("/show_comment", methods=['POST'])
 def show_comment():
     num_receive = request.form['num_give']
-
-    all_comments = list(db.diary.find({"num":num_receive}, {'_id': False}))
+    all_comments = list(db.comment.find({"num":num_receive}, {'_id': False}))
     # 받은 게시판 넘버로 해당하는 모든 댓글을 끌고와서 반환
     return jsonify({'result': all_comments})
-
 
 @app.route("/delete_comment", methods=['POST'])
 def delete_comment():
