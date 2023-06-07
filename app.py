@@ -35,6 +35,13 @@ def myview():
         return render_template('myview.html',id=id)
     return render_template('login.html')
 
+@app.route('/myview2')
+def myview2():
+    if 'id' in session:
+        id= session.get('id',None)
+        return render_template('myview2.html',id=id)
+    return render_template('login.html')
+
 
 @app.route('/mypage')
 def mypage():
@@ -90,36 +97,44 @@ def writediary_post():
     all_comments = list(db.diary.find({},{'_id':False}))
     return jsonify({'result': all_comments})
 
-
-@app.route("/deletediary", methods=['POST'])
-def deletediary():
+@app.route("/writecomment", methods=['POST'])
+def write_comment():
+    name_receive = request.form['name_give']
+    comment_receive = request.form['comment_give']
     num_receive = request.form['num_give']
 
+    all_comments = list(db.comment.find({},{'_id':False}))
+    count = len(all_comments) + 1
+
     doc = {
-        'num':num_receive,
+        'num': num_receive,
+        'id' : count,
+        'name': name_receive,
+        'comment': comment_receive,
+    }
+    db.comment.insert_one(doc)
+    return jsonify({'msg': '전송완료!'})
+
+
+@app.route("/showcomment", methods=['POST'])
+def show_comment():
+    num_receive = request.form['num_give']
+
+    all_comments = list(db.diary.find({},{'_id':False}))
+    # 받은 게시판 넘버로 해당하는 모든 댓글을 끌고와서 반환
+    return jsonify({'result': all_comments})
+
+
+@app.route("/deletecomment", methods=['POST'])
+def delete_comment():
+    id_receive = request.form['id_give']
+
+    doc = {
+        'id':id_receive,
     }
     db.diary.delete_one(doc)
 
     return jsonify({'msg': '삭제완료!'})
-
-
-@app.route("/upload", methods=['POST'])
-def upload():
-    img = request.files['image']
-
-    ## GridFs를 통해 파일을 분할하여 DB에 저장하게 된다
-    fs = gridfs.GridFS(db)
-    fs.put(img, filename = 'name')
-
-    ## file find ##
-    data = client.grid_file.fs.files.find_one({'filename':'name'})
-
-    ## file download ##
-    my_id = data['_id']
-    outputdata = fs.get(my_id).read()
-    output = open('./images/'+'back.jpeg', 'wb')
-    output.write(outputdata)
-    return jsonify({'msg':'저장에 성공했습니다.'})
 
 
 if __name__ == '__main__':

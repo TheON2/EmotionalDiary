@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+      function toggleCommentBox() {
+        var commentbox = document.getElementById('commentbox');
+        commentbox.style.display = (commentbox.style.display === 'none') ? 'block' : 'none';
+      }
+    </script>
+</head>
+<body>
+<div class="card">
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p>123</p>
+            <footer class="blockquote-footer"></footer>
+        </blockquote>
+        <button onclick="toggleCommentBox()">댓글보기</button>
+    </div>
+</div>
+<div class="card commentbox" id="commentbox">
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p>4</p>
+            <footer class="blockquote-footer"></footer>
+        </blockquote>
+    </div>
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p>4</p>
+            <footer class="blockquote-footer"></footer>
+        </blockquote>
+    </div>
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p>4</p>
+            <footer class="blockquote-footer"></footer>
+        </blockquote>
+    </div>
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p>4</p>
+            <footer class="blockquote-footer"></footer>
+        </blockquote>
+    </div> <div class="card-body">
+    <blockquote class="blockquote mb-0">
+        <p>4</p>
+        <footer class="blockquote-footer"></footer>
+    </blockquote>
+</div>
+
+</div>
+
+
+</body>
+</html>
