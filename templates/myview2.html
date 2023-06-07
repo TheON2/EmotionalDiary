@@ -56,13 +56,13 @@
     </style>
     <script>
       $(document).ready(function () {
-        show_comment();
+        show_diary();
       });
 
-      function save_comment() {
+      function save_diary() {
         let id = $('#id').val();
         let name = $('#name').val();
-        let comment = $('#comment').val();
+        let content = $('#content').val();
         let private = $('#private').is(':checked');
         let emoji;
         if($('#inlineRadio1').is(':checked'))emoji=1;
@@ -74,11 +74,101 @@
         let formData = new FormData();
         formData.append("id_give", id);
         formData.append("name_give", name);
-        formData.append("comment_give", comment);
+        formData.append("content_give", content);
         formData.append("private_give", private);
         formData.append("emoji_give", emoji);
 
-        fetch('/writediary', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
+        fetch('/write_diary', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
+          alert(data["msg"]);
+        });
+        window.location.reload()
+      }
+
+
+      function show_diary() {
+        fetch('/write_diary').then((res) => res.json()).then((data) => {
+          $('#comment-list').empty()
+
+          let rows = data['result']
+          rows.forEach((a) => {
+            let num = a['num']
+            let name = a['name']
+            let content = a['content']
+            let private = a['private']==="true" ? "비공개" : "공개"
+            if(a['emoji']==='1')emoji = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-laughing" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M12.331 9.5a1 1 0 0 1 0 1A4.998 4.998 0 0 1 8 13a4.998 4.998 0 0 1-4.33-2.5A1 1 0 0 1 4.535 9h6.93a1 1 0 0 1 .866.5zM7 6.5c0 .828-.448 0-1 0s-1 .828-1 0S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 0-1 0s-1 .828-1 0S9.448 5 10 5s1 .672 1 1.5z"/>
+        </svg>`
+            else if(a['emoji']==='2')emoji = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-smile" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
+        </svg>`
+            else if(a['emoji']==='3')emoji = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-neutral" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M4 10.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5zm3-4C7 5.672 6.552 5 6 5s-1 .672-1 1.5S5.448 8 6 8s1-.672 1-1.5zm4 0c0-.828-.448-1.5-1-1.5s-1 .672-1 1.5S9.448 8 10 8s1-.672 1-1.5z"/>
+        </svg>`
+            else if(a['emoji']==='4')emoji = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-frown" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
+        </svg>`
+            else emoji = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-angry" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683zm6.991-8.38a.5.5 0 1 1 .448.894l-1.009.504c.176.27.285.64.285 1.049 0 .828-.448 1.5-1 1.5s-1-.672-1-1.5c0-.247.04-.48.11-.686a.502.502 0 0 1 .166-.761l2-1zm-6.552 0a.5.5 0 0 0-.448.894l1.009.504A1.94 1.94 0 0 0 5 6.5C5 7.328 5.448 8 6 8s1-.672 1-1.5c0-.247-.04-.48-.11-.686a.502.502 0 0 0-.166-.761l-2-1z"/>
+        </svg>`
+
+            let temp_html = `<div class="card">
+                                ${private}
+                                ${emoji}
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p>${content}</p>
+                                        <footer class="blockquote-footer">${name}</footer>
+                                    </blockquote>
+                                    <button onclick="toggleCommentBox(${num})">댓글보기</button>
+                                </div>
+                                <div class="mycards" id="comment-list-${num}"></div>
+                            </div>
+                            `
+            let temp_write = `
+                            <div class="mypost">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="${num}name" placeholder="url"/>
+                                <label for="floatingInput">댓글 제목</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea
+                                        class="form-control"
+                                        placeholder="Leave a comment here"
+                                        id="${num}comment"
+                                        style="height: 100px"
+                                ></textarea>
+                                <label for="floatingTextarea2">댓글 내용</label>
+                            </div>
+                            <button onclick="writeComment(${num})" type="button" class="btn btn-dark">
+                                댓글 남기기
+                            </button>
+                        </div>`
+            $('#diary-list').append(temp_html)
+            $('#diary-list').append(temp_write)
+          })
+        })
+      }
+
+      function writeComment(num){
+        let name = document.getElementById(`${num}name`).value;
+        let comment = document.getElementById(`${num}comment`).value;
+
+        {#let name = $('#cname').val();#}
+        {#let comment = $('#comment').val();#}
+        alert(name);
+        alert(comment);
+
+        let formData = new FormData();
+        formData.append("name_give", name);
+        formData.append("comment_give", comment);
+        formData.append("num_give", num);
+
+        fetch('/write_comment', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
           alert(data["msg"]);
         });
         window.location.reload()
@@ -89,63 +179,8 @@
         commentbox.style.display = (commentbox.style.display === 'none') ? 'block' : 'none';
       }
 
-      function deletediary(num){
-        $.ajax({
-          type:"POST",
-          url:"/delete",
-          data: {num_give : num},
-          success: function (res){
-            alert(res["msg"])
-            window.location.reload()
-          }
-        })
-      }
-
-
-      function showComment(num) {
-        $.ajax({
-          type:"POST",
-          url:"/showcomment",
-          data: {num_give : num},
-          success: function (res){
-            let row = res["result"]
-            row.forEach((a)=>{
-              let comment = a["comment"];
-              let name = a["name"];
-              let temp_comment = `
-                            <div class="card" id="commentbox">
-                                <div class="card-body">
-                                    <blockquote class="blockquote mb-0">
-                                        <p>${comment}</p>
-                                        <footer class="blockquote-footer">${name}</footer>
-                                    </blockquote>
-                                </div>
-                            </div>
-                            `
-              $(`#comment-list-${num}`).append(temp_comment)
-            })
-            window.location.reload()
-          }
-        })
-      }
-
-      function writeComment(num){
-        let name = $('#name').val();
-        let comment = $('#comment').val();
-
-        let formData = new FormData();
-        formData.append("name_give", name);
-        formData.append("comment_give", comment);
-        formData.append("num_give", num);
-
-        fetch('/writecomment', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
-          alert(data["msg"]);
-        });
-        window.location.reload()
-      }
-
       function show_comment(num) {
-        fetch('/showcomment').then((res) => res.json()).then((data) => {
+        fetch('/show_comment').then((res) => res.json()).then((data) => {
           let rows = data['result']
           rows.forEach((a) => {
             let num = num
@@ -229,11 +264,11 @@
             <path d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683zm6.991-8.38a.5.5 0 1 1 .448.894l-1.009.504c.176.27.285.64.285 1.049 0 .828-.448 1.5-1 1.5s-1-.672-1-1.5c0-.247.04-.48.11-.686a.502.502 0 0 1 .166-.761l2-1zm-6.552 0a.5.5 0 0 0-.448.894l1.009.504A1.94 1.94 0 0 0 5 6.5C5 7.328 5.448 8 6 8s1-.672 1-1.5c0-.247-.04-.48-.11-.686a.502.502 0 0 0-.166-.761l-2-1z"/>
         </svg></label>
     </div>
-    <button onclick="save_comment()" type="button" class="btn btn-dark">
+    <button onclick="save_diary()" type="button" class="btn btn-dark">
         댓글 남기기
     </button>
 </div>
-<div class="mycards" id="comment-list">
+<div class="mycards" id="diary-list">
 </div>
 </body>
 </html>
