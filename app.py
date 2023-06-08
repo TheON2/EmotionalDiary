@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import gridfs
+import re
 
 client = MongoClient('mongodb+srv://sparta:test@cluster0.xi1pqvv.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
@@ -36,14 +37,6 @@ def myview():
     return render_template('login.html')
 
 
-@app.route('/myview2')
-def myview2():
-    if 'id' in session:
-        id = session.get('id', None)
-        return render_template('myview2.html', id=id)
-    return render_template('login.html')
-
-
 @app.route('/mypage')
 def mypage():
     if 'id' in session:
@@ -56,13 +49,75 @@ def mypage():
 def join():
     return render_template('join.html')
 
+# 이메일 유효성 검사
+# import re를 선언하고 사용해야함
+def is_valid_email(email):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(pattern, email)
+
+
+# 추가생성
+@app.route('/join_done', methods=['POST'])
+def join_done():
+    email = request.form['email_give']
+    name = request.form['name_give']
+    userID = request.form['id_give']
+    pwd = request.form['pwd_give']
+    nickname = request.form['nick_give']
+
+    # 모든 필드가 비어있지 않은 조건을 걸어준다(is not null)
+    if email and name and userID and pwd and nickname:
+        # 중복체크의 우선순의는 email -> ID -> nickname로 구성한다.
+        # ex) email과 userID 둘 다 중복일 경우
+        # 출력메세지: 이메일이 이미 사용 중입니다.
+
+        # 중복체크: 이미 존재하는 email값 확인
+        user_email = db.users.find_one({'email': email})
+        if user_email:
+            return jsonify({'msg': '이메일이 이미 사용 중입니다.'})
+        # 중복체크: 이미 존재하는 id값 확인
+        user_id = db.users.find_one({'id': userID})
+        if user_id:
+            return jsonify({'msg': '아이디가 이미 사용 중입니다.'})
+        # 중복체크: 이미 존재하는 nickname값 확인
+        user_nickname = db.users.find_one({'nickname': nickname})
+        if user_nickname:
+            return jsonify({'msg': '닉네임이 이미 사용 중입니다.'})
+
+        # 이메일 유효성 검사
+        if not is_valid_email(email):
+            return jsonify({'msg': '유효한 이메일 형식이 아닙니다.'})
+
+        # MongoDB에 데이터 저장
+        doc = {
+            'email': email,
+            'name': name,
+            'id': userID,
+            'pwd': pwd,
+            'nickname': nickname
+        }
+        db.users.insert_one(doc)
+        return jsonify({'msg': '회원 가입이 완료되었습니다.'})
+
+    else:
+        return jsonify({'msg': '모든 정보를 입력하세요.'})
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        session['id'] = request.form['id']
-        id = session.get('id', None)
-        return render_template('index.html', id=id)
+        userID = request.form['loginID']
+        password = request.form['loginPW']
+
+        user = db.users.find_one({'id': userID, 'pwd': password})
+
+        if user is not None:
+            session['id'] = user['id']
+            return jsonify({'msg':"로그인 성공!!"})
+        else:
+            return jsonify({'msg': "로그인 정보가 유효하지 않습니다."})
+
     return render_template('login.html')
 
 
