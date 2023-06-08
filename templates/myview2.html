@@ -149,7 +149,7 @@
                                     </blockquote>
                                     <button onclick="toggleCommentBox(${num})">댓글보기</button>
                                 </div>
-                                <div class="mycards" id="comment-list-${num}"></div>
+                                <div class="mycards" id="comment-list-${num}" style="display: none"></div>
                             </div>
                             `
             let temp_write = `
@@ -181,11 +181,13 @@
       function writeComment(num){
         let name = document.getElementById(`${num}name`).value;
         let comment = document.getElementById(`${num}comment`).value;
+        let id = "{{ session['id'] }}";
 
         let formData = new FormData();
         formData.append("name_give", name);
         formData.append("comment_give", comment);
         formData.append("num_give", num);
+        formData.append("wid_give",id );
 
         fetch('/write_comment', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
           alert(data["msg"]);
@@ -198,17 +200,100 @@
         commentbox.style.display = (commentbox.style.display === 'none') ? 'block' : 'none';
       }
 
+      function t_update_comment(id){
+        $.ajax({
+          type: "POST",
+          url: "/show_comment",
+          data: {id_give: id},
+          success: function (response) {
+            let raw = response['result']
+            let name = raw['name']
+            let num = raw['num']
+            let comment = raw['comment']
+            let wid = raw['wid']
+
+            $(`#commentbox${id}`).empty();
+            let temp_comment = `
+                                <div class="card-body">
+                                    <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="fixname${id}" placeholder="url"/>
+                                <label for="floatingInput">댓글 제목</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea
+                                        class="form-control"
+                                        placeholder="Leave a comment here"
+                                        id="fixcomment${id}"
+                                        style="height: 100px"
+                                ></textarea>
+                                <label for="floatingTextarea2">댓글 내용</label>
+                            </div>
+                            <button onclick="update_comment(${id})" type="button" class="btn btn-dark">
+                                수정완료
+                            </button>
+                            <button onclick="writeComment()" type="button" class="btn btn-dark">
+                                취소하기
+                            </button>
+                                </div>
+                            `
+            $(`#commentbox${id}`).append(temp_comment)
+          }
+        });
+        // 아이디로 get 해서 해당하는 코멘트의 정보를 들고온담에
+        // 해당하는 id의 게시물의 정보를 들고온후
+        // 덧글넘버로 해당 게시물의 컨테이너를 찾아
+        // 기존 정보들을 지워주고
+        // 해당 자리에 텍스트 박스들을 배치한다
+        // 그이후 섭밋하면 update_comment 메서드가 발동하며 리프레시
+        // 취소하면 html만 원래대로 되돌리고 끝낸다
+
+
+      }
+
+      function update_comment(id){
+        let name = document.getElementById(`fixname${id}`).value
+        let comment = document.getElementById(`fixcomment${id}`).value
+
+        $.ajax({
+          type: "POST",
+          url: "/update_comment",
+          data: {id_give: id,name_give: name,comment_give:comment},
+          success: function (response) {
+            alert(response['msg'])
+            window.location.reload()
+          }
+        })
+
+      }
+
       function show_comment(num) {
         let formData = new FormData();
         formData.append("num_give", num);
-        fetch('/show_comment', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
+        fetch('/show_comments', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
           let rows = data['result']
           rows.forEach((a) => {
+            let id = a['id']
             let name = a['name']
             let comment = a['comment']
+            let wid = String(a['wid'])
+            let compareid = "{{ session['id'] }}"
 
+            if(wid === compareid){
             let temp_comment = `
-                            <div class="card" id="commentbox">
+                            <div class="card" id="commentbox${id}">
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p>${comment}</p>
+                                        <footer class="blockquote-footer">${name}</footer>
+                                        <button onclick="t_update_comment(${id})">수정</button>
+                                        <button onclick="">삭제</button>
+                                    </blockquote>
+                                </div>
+                            </div>
+                            `
+              $(`#comment-list-${num}`).append(temp_comment)
+            } else {
+              let temp_comment = `<div class="card" id="commentbox${id}">
                                 <div class="card-body">
                                     <blockquote class="blockquote mb-0">
                                         <p>${comment}</p>
@@ -216,8 +301,9 @@
                                     </blockquote>
                                 </div>
                             </div>
-                            `
-            $(`#comment-list-${num}`).append(temp_comment)
+            `
+              $(`#comment-list-${num}`).append(temp_comment)
+            }
           })
         })
       }
