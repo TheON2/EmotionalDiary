@@ -184,7 +184,7 @@ def write_diary():
         db.diary.insert_one(doc)
 
         return jsonify({'msg': '전송완료!'})
-    all_comments = list(db.diary.find({}, {'_id': False}))
+    all_comments = list(db.diary.find({'private':'false'}, {'_id': False}))
     return jsonify({'result': all_comments})
 
 
