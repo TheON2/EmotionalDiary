@@ -45,9 +45,44 @@ def mypage():
     return render_template('login.html')
 
 
+@app.route('/show_mypage',methods=['POST'])
+def show_mypage():
+    user_id = session.get('id')
+    print(user_id)
+    user = db.users.find_one({"id":user_id}, {'_id': False})
+    print(user)
+    # 받은 댓글 넘버로 해당하는 댓글을 끌고와서 반환
+    return jsonify({'result': user})
+
+
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    nickname = request.form['nickname_give']
+    user_id = session.get('id')
+    print(nickname)
+    print(user_id)
+    result = db.users.update_one({'id': user_id},{'$set': {'nickname': nickname }})
+    if result.modified_count > 0:
+        return jsonify({'msg': "수정이 완료되었습니다.", 'success': True})
+    else:
+        return jsonify({'msg': "해당 사용자를 찾을 수 없습니다.", 'success': False})
+
+
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    user_id = session.get('id')
+    result = db.users.delete_one({'id': user_id})
+    print(result)
+    if result.deleted_count > 0:
+        return jsonify({'msg': "회원탈퇴가 완료되었습니다!"})
+    else:
+        return jsonify({'msg': "해당 사용자를 찾을 수 없습니다."})
+
+
 @app.route('/join')
 def join():
     return render_template('join.html')
+
 
 # 이메일 유효성 검사
 # import re를 선언하고 사용해야함
@@ -101,7 +136,6 @@ def join_done():
 
     else:
         return jsonify({'msg': '모든 정보를 입력하세요.'})
-
 
 
 @app.route('/login', methods=['GET', 'POST'])

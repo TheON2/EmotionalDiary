@@ -1,12 +1,10 @@
-{% extends 'layout.html' %}
-
-{% block content %}
+{% extends 'layout.html' %} {% block content %}
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link
                 href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -14,6 +12,9 @@
                 integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
                 crossorigin="anonymous"
         />
+        <!-- 달력 CSS 임포트  -->
+        <link rel="stylesheet" href="../static/css/calendar.css" />
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script
                 src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -21,12 +22,14 @@
                 crossorigin="anonymous"
         ></script>
 
+        <title>12조 미니 프로젝트 - 감정일기</title>
 
-        <title>감정일기</title>
-
-        <meta property="og:title" content="구왁" />
-        <meta property="og:description" content="구와악" />
-        <meta property="og:image" content="https://avatars.githubusercontent.com/u/32028454?s=400&u=7993b49546f6ebb45968dbafa6c97c5789ec2254&v=4" />
+        <meta property="og:title" content="감정일기" />
+        <meta property="og:description" content="감정일기" />
+        <meta
+                property="og:image"
+                content="https://avatars.githubusercontent.com/u/32028454?s=400&u=7993b49546f6ebb45968dbafa6c97c5789ec2254&v=4"
+        />
 
         <link
                 href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
@@ -60,15 +63,171 @@
                 margin-top: 10px;
                 margin-bottom: 10px;
             }
+            #chart_wrap {
+                margin: 0 auto;
+                display: flex;
+                justify-content: center;
+            }
+            #wrap_calender {
+                margin-top: 100px;
+            }
+            #chart_wrap {
+                margin-top: 100px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+            }
+            #wrap_notice {
+                width: 300px;
+                height: 200px;
+            }
+            .notice {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border: solid 2px black;
+            }
+            #myChart1 {
+                margin-right: 50px;
+            }
+            #myChart2 {
+                margin-left: 50px;
+            }
+            #left_chart_wrap {
+                text-align: center;
+                justify-content: center;
+            }
         </style>
-        <script>
+        <!-- 차트 -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        </script>
+        <!-- 달력 import-->
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+        <!-- 차트 JS 파일 임포트 -->
+        <script src="../static/js/chartEmotion.js" defer></script>
+
+        <!-- 달력 JS 파일 임포트 -->
+        <script src="../static/js/callendar.js" defer></script>
     </head>
     <body>
-    <div>
-        메인 및 다른유저 일기페이지
+    <!-- HTML 코드 -->
+    <!-- 차트 & 달력 -->
+    <div id="chart_wrap">
+        <div class="left_chart_wrap">
+            <div class="wrap_last_month_emotion">
+                <span id="last_month_emotion">지난달 주요 감정은 {}입니다.</span>
+            </div>
+            <canvas id="myChart1" width="500" height="300"></canvas>
+        </div>
+
+        <div id="wrap_notice">
+            <div class="notice">
+                <span id="notice_user" class="main_id">oo님은</span><br />
+                <span id="notice_last_month">지난달 {}을</span><br />
+                <span id="notice_currnet_month">이번달 {}을</span><br />
+                <span>가장 많이 느끼셨어요</span>
+            </div>
+        </div>
+        <div>
+            <div class="wrap_current_month_emotion">
+                <span id="current_month_emotion">이번달 주요 감정은 {}입니다.</span>
+            </div>
+            <canvas id="myChart2" width="500" height="300"></canvas>
+        </div>
     </div>
+
+    <!-- 달력 -->
+    <!-- Copyright (c) 2023 by Marco Biedermann (https://codepen.io/marcobiedermann/pen/AjxBbB) -->
+    <div class="container">
+        <div class="calendar">
+            <header>
+                <h2>September</h2>
+
+                <a class="btn-prev fontawesome-angle-left"></a>
+                <a class="btn-next fontawesome-angle-right"></a>
+            </header>
+
+            <table>
+                <thead>
+                <tr>
+                    <td>Mo</td>
+                    <td>Tu</td>
+                    <td>We</td>
+                    <td>Th</td>
+                    <td>Fr</td>
+                    <td>Sa</td>
+                    <td>Su</td>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td class="prev-month">26</td>
+                    <td class="prev-month">27</td>
+                    <td class="prev-month">28</td>
+                    <td class="prev-month">29</td>
+                    <td class="prev-month">30</td>
+                    <td class="prev-month">31</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td class="event has-data">
+                        <span class="event-tooltip">연습연습</span>
+                        10
+                    </td>
+                    <td>11</td>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>14</td>
+                    <td>15</td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>17</td>
+                    <td>18</td>
+                    <td>19</td>
+                    <td class="event">20</td>
+                    <td class="event">21</td>
+                    <td>22</td>
+                </tr>
+
+                <tr>
+                    <td class="current-day event">23</td>
+                    <td>24</td>
+                    <td>25</td>
+                    <td>26</td>
+                    <td>27</td>
+                    <td>28</td>
+                    <td>29</td>
+                </tr>
+                <tr>
+                    <td>30</td>
+                    <td id="write_record" class="next-month" value="1">1</td>
+                    <td class="next-month">2</td>
+                    <td class="next-month">3</td>
+                    <td class="next-month">4</td>
+                    <td class="next-month">5</td>
+                    <td class="next-month">6</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- end calendar -->
+    </div>
+    <!-- end container -->
     </body>
     </html>
 {% endblock %}
