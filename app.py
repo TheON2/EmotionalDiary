@@ -101,7 +101,6 @@ def write_diary():
 
 @app.route("/write_comment", methods=['POST'])
 def write_comment():
-    name_receive = request.form['name_give']
     comment_receive = request.form['comment_give']
     num_receive = request.form['num_give']
     wid_receive = request.form['wid_give']
@@ -117,7 +116,6 @@ def write_comment():
         'num': num_receive,
         'id': count,
         'wid': wid_receive,
-        'name': name_receive,
         'comment': comment_receive,
     }
     db.comment.insert_one(doc)
@@ -144,12 +142,9 @@ def show_comment():
 @app.route("/update_comment", methods=['POST'])
 def update_comment():
     id_receive = request.form['id_give']
-    name_receive = request.form['name_give']
     comment_receive = request.form['comment_give']
     print(id_receive)
-    print(name_receive)
     print(comment_receive)
-    db.comment.update_one({'id': int(id_receive)}, {'$set':{'name': name_receive}})
     db.comment.update_one({'id': int(id_receive)}, {'$set':{'comment': comment_receive}})
     # 받은 댓글 넘버로 해당하는 댓글을 끌고와서 반환
     return jsonify({'msg': '수정완료'})

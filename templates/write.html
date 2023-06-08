@@ -1,72 +1,258 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!DOCTYPE html>
+    <html lang="en">
 
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous"
-    />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"
-    ></script>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <title>일기 쓰기</title>
-    <meta property="og:title" content="구왁" />
-    <meta property="og:description" content="구와악" />
-    <meta property="og:image" content="https://avatars.githubusercontent.com/u/32028454?s=400&u=7993b49546f6ebb45968dbafa6c97c5789ec2254&v=4" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+              crossorigin="anonymous"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous"></script>
 
-    <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
-            rel="stylesheet"
-    />
-    <style>
-        * {
-            font-family: "Noto Serif KR", serif;
-        }
+        <title>일기 쓰기</title>
 
-        .mypost {
-            width: 95%;
-            max-width: 500px;
-            margin: 20px auto 20px auto;
+        <meta property="og:title" content="구왁"/>
+        <meta property="og:description" content="구와악"/>
+        <meta property="og:image"
+              content="https://avatars.githubusercontent.com/u/32028454?s=400&u=7993b49546f6ebb45968dbafa6c97c5789ec2254&v=4"/>
 
-            box-shadow: 0px 0px 3px 0px black;
-            padding: 20px;
-        }
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
+              rel="stylesheet"/>
+        <style>
+            * {
+                font-family: "Noto Serif KR", serif;
+            }
 
-        .mypost > button {
-            margin-top: 15px;
-        }
+            .mypost {
+                width: 95%;
+                max-width: 500px;
+                margin: 20px auto 20px auto;
 
-        .mycards {
-            width: 95%;
-            max-width: 500px;
-            margin: auto;
-        }
+                box-shadow: 0px 0px 3px 0px black;
+                padding: 20px;
+            }
 
-        .mycards > .card {
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-    </style>
-    <script>
+            .mypost > button {
+                margin-top: 15px;
+            }
 
-    </script>
-</head>
-<body>
-    <div>
-        일기 쓰기 및 수정 페이지
+            .mycards {
+                width: 95%;
+                max-width: 500px;
+                margin: auto;
+            }
+
+            .mycards > .card {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            * {
+                font-family: "Noto Serif KR", serif;
+            }
+
+            .grid {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-start;
+            }
+
+            .emoji-button {
+                display: flex;
+                gap: 10px;
+            }
+
+            .emoji-button a {
+                text-decoration: none;
+            }
+
+            .emoji-button img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .custom-style {
+                margin-right: 50px;
+                margin-top: 100px;
+                /* 우측 여백 설정 */
+                /* 원하는 스타일 지정 */
+            }
+
+            .container {
+                display: flex;
+                justify-content: flex-start;
+            }
+
+
+            .form-container {
+                margin-top: 50px;
+                margin-left: 40%;
+                width: 700px;
+                height: 20%;
+
+                position: absolute;
+            }
+        </style>
+        <script>
+
+          // 글자수 제한(한줄일기)
+          function countCharacters() {
+            const textarea = document.getElementById("floatingTextarea2");
+            const characterCount = document.getElementById("characterCount");
+
+            let limit = 40;
+            let inputText = textarea.value;
+            let inputTextCount = inputText.length;
+
+            if (inputTextCount > limit) {
+              inputText = textarea.value.substring(0, limit);
+              inputTextCount = inputText.length;
+              alert("글자 수는 40자까지만 입력할 수 있습니다.");
+            }
+
+            characterCount.textContent = "글자 수: " + inputTextCount;
+          }
+
+          // 작성건 캔슬
+          function cancelDiary() {
+            const textarea = document.getElementById('floatingTextarea2');
+            textarea.value = '';
+
+            alert("일기 작성이 취소되었습니다.");
+          }
+
+          // 작성건 저장
+          function saveDiary() {
+            const textarea = document.getElementById('floatingTextarea2');
+            const inputData = textarea.value;
+
+            let trs = new XMLHttpRequest();
+            trs.open('POST', '/writediary');  // 서버의 저장 데이터를 처리하는 URL
+            trs.setRequestHeader('Content-Type', 'application/json');
+            trs.onload = function () {
+              if (trs.status === 200) {
+                alert("일기가 성공적으로 저장되었습니다!")
+                console.log('Data saved successfully!');
+              } else {
+                alert("일기 저장에 실패했습니다.")
+                console.error('Failed to save data!');
+              }
+            };
+            trs.send(JSON.stringify({data: inputData}));
+          }
+
+          // 이모티콘 선택데이터 전송
+          function selectMood(mood) {
+            const textarea = document.getElementById('floatingTextarea2');
+            const inputData = textarea.value;
+            const emojiData = getSelectedEmoji(); // 선택된 이모지 값을 가져옴
+
+            // 서버로 데이터 전송
+            fetch('/writediary', {
+              method: 'POST', headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                emoji_give: emojiData // 이모지 데이터 추가
+              })
+            })
+              .then(response => response.json())
+              .then(data => {
+                alert(data.msg);
+                // 처리 완료 후 필요한 작업 수행
+              })
+
+            console.log(mood);
+          }
+
+          function getSelectedEmoji() {
+            const selectedEmoji = document.querySelector('.emoji-button.selected');
+            // 선택된 이모지 버튼의 요소 가져오기
+
+            if (selectedEmoji) {
+              const emojiValue = selectedEmoji.getAttribute('data-emoji-value');
+              // 선택된 이모지 버튼의 data-emoji-value 속성 값 가져오기
+              return emojiValue;
+            }
+
+            return null; // 선택된 이모지가 없을 경우 null을 반환
+          }
+
+
+        </script>
+    </head>
+
+
+    <body>
+
+    <!-- 홈 / 마이페이지 버튼 -->
+    <div class="d-flex">
+        <div class="d-grid gap-2 d-md-block flex-fill">
+            <button type="button" class="btn btn-primary" onclick="location.href='/.html'">Home</button>
+        </div>
+
+        <div class="d-grid gap-2 justify-content-md-end flex-fill">
+            <button type="button" class="btn btn-primary" onclick="location.href='/mypage.html'">My page</button>
+        </div>
     </div>
-</body>
-</html>
+
+    <!-- 헤더 -->
+    <div>
+        <h1 class="display-1">Hi there!</h1>
+    </div>
+
+
+    <div class="container">
+        <!-- 텍스트 공간 -->
+        <div class="form-container">
+            <div class="form-floating">
+                <textarea class="form-control" id="floatingTextarea2" style="height: 100px"
+                          oninput="countCharacters()"></textarea>
+                <p id="characterCount">글자 수: 0</p>
+                <label for="floatingTextarea2">일기쓰기</label>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveDiary()">저장하기</button>
+            <button type="button" class="btn btn-primary" onclick="cancelDiary()">작성취소</button>
+        </div>
+
+        <!-- 이모티콘 컨테이너 -->
+        <div class="image-container">
+            <div class="grid text-start">
+                <div class="emoji-button">
+                    <div class="image-container1 custom-style" onclick="selectMood('goofy')">
+                        <a href="#" onclick="selectMood('goofy')">
+                            <img src="images/noun-goofy-103921.png" alt="goofy Emoji" width="100px" height="100px">
+                        </a>
+                    </div>
+                    <div class="image-container1 custom-style" onclick="selectMood('happy')">
+                        <a href="#" onclick="selectMood('happy')">
+                            <img src="images/noun-happy-103910.png" alt="happy Emoji" width="100px" height="100px">
+                        </a>
+                    </div>
+                    <div class="image-container1 custom-style" onclick="selectMood('nerd')">
+                        <a href="#" onclick="selectMood('nerd')">
+                            <img src="images/noun-nerd-103920.png" alt="nerd Emoji" width="100px" height="100px">
+                        </a>
+                    </div>
+                    <div class="image-container1 custom-style" onclick="selectMood('sad')">
+                        <a href="#" onclick="selectMood('sad')">
+                            <img src="images/noun-sad-103915.png" alt="sad Emoji" width="100px" height="100px">
+                        </a>
+                    </div>
+                    <div class="image-container1 custom-style" onclick="selectMood('shocked')">
+                        <a href="#" onclick="selectMood('shocked')">
+                            <img src="images/noun-shocked-103927.png" alt="shocked Emoji" width="100px" height="100px">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
 {% endblock %}
