@@ -154,10 +154,7 @@ def update_comment():
 def delete_comment():
     id_receive = request.form['id_give']
 
-    doc = {
-        'id': id_receive,
-    }
-    db.comment.delete_one(doc)
+    db.comment.delete_one({'id':int(id_receive)})
 
     return jsonify({'msg': '삭제완료!'})
 

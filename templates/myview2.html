@@ -166,6 +166,16 @@
         window.location.reload()
       }
 
+      function deleteComment(id){
+        let formData = new FormData();
+        formData.append("id_give", id);
+
+        fetch('/delete_comment', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
+          alert(data["msg"]);
+        });
+        window.location.reload()
+      }
+
       function toggleCommentBox(num) {
         var commentbox = document.getElementById(`comment-list-${num}`);
         commentbox.style.display = (commentbox.style.display === 'none') ? 'block' : 'none';
@@ -207,20 +217,10 @@
             $(`#commentbox${id}`).append(temp_comment)
           }
         });
-        // 아이디로 get 해서 해당하는 코멘트의 정보를 들고온담에
-        // 해당하는 id의 게시물의 정보를 들고온후
-        // 덧글넘버로 해당 게시물의 컨테이너를 찾아
-        // 기존 정보들을 지워주고
-        // 해당 자리에 텍스트 박스들을 배치한다
-        // 그이후 섭밋하면 update_comment 메서드가 발동하며 리프레시
-        // 취소하면 html만 원래대로 되돌리고 끝낸다
-
-
       }
 
       function update_comment(id){
         let comment = document.getElementById(`fixcomment${id}`).value
-
         $.ajax({
           type: "POST",
           url: "/update_comment",
@@ -230,7 +230,6 @@
             window.location.reload()
           }
         })
-
       }
 
       function show_comment(num) {
@@ -253,7 +252,7 @@
                                         <p>${comment}</p>
                                         <footer class="blockquote-footer">${wid}</footer>
                                         <button onclick="t_update_comment(${id})">수정</button>
-                                        <button onclick="">삭제</button>
+                                        <button onclick="deleteComment(${id})">삭제</button>
                                     </blockquote>
                                 </div>
                             </div>
