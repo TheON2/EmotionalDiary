@@ -11,8 +11,10 @@ app.secret_key = 'any random string'
 
 @app.route('/')
 def home():
-    id = session.get('id', None)
-    return render_template('index.html', id=id)
+    if 'id' in session:
+        id = session.get('id', None)
+        return render_template('index.html', id=id)
+    return render_template('login.html')
 
 
 @app.route('/write')
@@ -158,7 +160,51 @@ def login():
 @app.route('/logout', methods=["GET"])
 def logout():
     session.pop('id', None)
-    return render_template('index.html')
+    return render_template('login.html')
+
+
+@app.route("/writediary", methods=['GET','POST'])
+def writediary_post():
+    if request.method == 'POST':
+        id_receive = request.form['id_give']
+        comment_receive = request.form['comment_give']
+        emoji_receive = request.form['emoji_give']
+        day_receive = request.form['day_give']
+        month_receive = request.form['month_give']
+        diarytitle_receive = request.form['title_give']
+        private_receive = request.form['private_give']
+        select_keywd = request.form['select_keywd']
+
+        all_comments = list(db.diary.find({}, {'_id': False}))
+        count = len(all_comments) + 1
+
+        doc = {
+            'num': count,
+            'id': id_receive,
+            'content':comment_receive,
+            'emoji': emoji_receive,
+            'day' : day_receive,
+            'month' : month_receive,
+            'name' : diarytitle_receive,
+            'private' : private_receive,
+            'select_keywd' : select_keywd
+        }
+        db.diary.insert_one(doc)
+
+        return jsonify({'msg': '전송완료!'})
+
+    all_comments = list(db.diary.find({},{'_id':False}))
+    return jsonify({'result': all_comments})
+
+
+@app.route("/get_keywords", methods=["GET"])
+def get_keywords():
+    if 'id' in session:
+        id = session.get('id', None)
+        keyword_data = list(db.keyword.find({}, {'_id': False}))
+        return jsonify({'result': keyword_data})
+    else:
+        return render_template('login.html')
 
 
 @app.route("/write_diary", methods=['GET', 'POST'])
@@ -169,6 +215,10 @@ def write_diary():
         content_receive = request.form['content_give']
         private_receive = request.form['private_give']
         emoji_receive = request.form['emoji_give']
+        day_receive = request.form['day_give']
+        month_receive = request.form['month_give']
+        print(day_receive)
+        print(month_receive)
 
         all_comments = list(db.diary.find({}, {'_id': False}))
         count = len(all_comments) + 1
@@ -180,12 +230,34 @@ def write_diary():
             'content': content_receive,
             'private': private_receive,
             'emoji': emoji_receive,
+            'day' : day_receive,
+            'month' : month_receive,
         }
         db.diary.insert_one(doc)
 
         return jsonify({'msg': '전송완료!'})
     all_comments = list(db.diary.find({'private':'false'}, {'_id': False}))
     return jsonify({'result': all_comments})
+
+@app.route("/show_diary", methods=['GET'])
+def show_diary():
+    user_id = session.get('id')
+    all_mycomments = list(db.diary.find({"id":user_id}, {'_id': False}))
+    return jsonify({'result': all_mycomments})
+
+# @app.route("/show_mydiary", methods=['GET'])
+# def show_mydiary():
+#     all_mycomments = list(db.diary.find({'id':'false'}, {'_id': False}))
+#     return jsonify({'result': all_mycomments})
+
+
+@app.route("/get_username", methods=['GET'])
+def get_username():
+    user_id = session.get('id')
+    print(user_id)
+    user = db.users.find_one({"id":user_id}, {'_id': False})
+    print(user)
+    return jsonify({'result': user})
 
 
 @app.route("/write_comment", methods=['POST'])
