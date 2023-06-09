@@ -132,7 +132,7 @@
               .then((res) => res.json()).then((data) => {
               let rows = data['result']
               rows.forEach((a) => {
-                let name = a["id"]
+                let name = "{{ session['id'] }}";
                 let nickname = document.getElementById('nickname')
 
                 nickname.textContent = name
@@ -161,7 +161,6 @@
             let select_keyword = $('.btn-outline-primary.active').map(function () {
               return $(this).text();
             }).get();
-            alert(title)
 
             let emoji;
             if ($('#inlineRadio1').is(':checked')) emoji = 1;

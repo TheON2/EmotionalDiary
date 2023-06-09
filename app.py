@@ -83,6 +83,9 @@ def delete_account():
 
 @app.route('/join')
 def join():
+    if 'id' in session:
+        id = session.get('id', None)
+        return render_template('index.html', id=id)
     return render_template('join.html')
 
 
@@ -238,6 +241,7 @@ def write_diary():
         return jsonify({'msg': '전송완료!'})
     all_comments = list(db.diary.find({'private':'false'}, {'_id': False}))
     return jsonify({'result': all_comments})
+
 
 @app.route("/show_diary", methods=['GET'])
 def show_diary():

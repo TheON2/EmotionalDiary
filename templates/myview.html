@@ -94,7 +94,7 @@
               $('#comment-list').empty()
 
               let rows = data['result']
-              rows.forEach((a) => {
+              rows.reverse().forEach((a) => {
                 let id = a['id']
                 let month = a['month']
                 let day = a['day']
@@ -242,7 +242,6 @@
               url: "/update_comment",
               data: {id_give: id,comment_give:comment},
               success: function (response) {
-                alert(response['msg'])
                 window.location.reload()
               }
             })

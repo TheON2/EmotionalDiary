@@ -130,13 +130,12 @@
             formData.append("nickname_give", nickname);
 
             fetch('/update_profile', {method: "POST", body: formData,}).then((res) => res.json()).then((data) => {
-              alert(data["msg"]);
+              window.location.reload();
             });
           }
 
           function delete_account(){
             fetch('/delete_account', {method: "POST"}).then((res) => res.json()).then((data) => {
-              alert(data["msg"]);
               window.location.href = "/login";
             });
           }
