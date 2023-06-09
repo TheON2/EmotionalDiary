@@ -113,6 +113,43 @@
                 display: block;
                 margin: auto;
             }
+
+            .container2 {
+                height: 500px;
+                width: 500px;
+                border: 1px solid black;
+                overflow-y: scroll;
+            }
+
+            html::-webkit-scrollbar {
+                width: 10px;
+            }
+            html::-webkit-scrollbar-track {
+                background: black;
+            }
+            html::-webkit-scrollbar-thumb {
+                background: pink;
+                background-clip: padding-box;
+                border: 2px solid transparent;
+            }
+
+            .container2::-webkit-scrollbar {
+                width: 15px;
+            }
+            .container2::-webkit-scrollbar-track {
+                background: gray;
+            }
+            .container2::-webkit-scrollbar-thumb {
+                background: paleturquoise;
+                background-clip: padding-box;
+                border: 3px solid transparent;
+                border-radius: 8px;
+            }
+            .calendercontainer{
+                text-align: center;
+                display: inline-flex;
+                width: auto;
+            }
         </style>
 
         <!-- 차트 -->
@@ -173,7 +210,7 @@
         </svg>`
 
                 let temp_html = `<div class="card">
-                                <div>${emoji}  ${id} <div>${month}월 ${day}일</div></div>
+                                <div>${emoji}  ${id} #${private}<div>${month}월 ${day}일</div></div>
                                 <div class="card-body">
                                     <blockquote class="blockquote mb-0">
                                         <h3>${name}</h3>
@@ -220,7 +257,8 @@
 
     <!-- 달력 -->
     <!-- Copyright (c) 2023 by Marco Biedermann (https://codepen.io/marcobiedermann/pen/AjxBbB) -->
-    <div class="container">
+    <div class="container" style="width: auto">
+        <div class="calendercontainer" >
         <div class="calendar">
             <header>
                 <h2>June</h2>
@@ -302,8 +340,9 @@
             </table>
         </div>
         <!-- end calendar -->
-        <div id="diary-list">
+        <div class='container2' id="diary-list">
 
+        </div>
         </div>
     </div>
     <!-- end container -->
