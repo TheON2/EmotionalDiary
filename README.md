@@ -32,11 +32,11 @@ SQL 스터디 팀
 
 </aside>
 
-      IT 세계가 동작하는 원리와 성장하는 환경에 관심이 많습니다. 
+IT 세계가 동작하는 원리와 성장하는 환경에 관심이 많습니다. 
 
-      이번 협업을 통해 팀워크 능력을 기르고 버전 관리 방법을 배우며 
+이번 협업을 통해 팀워크 능력을 기르고 버전 관리 방법을 배우며 
 
-      저의 부족한 부분을 발견하고 싶습니다. **주특기는 Node.js를 선택했습니다.**
+저의 부족한 부분을 발견하고 싶습니다. **주특기는 Node.js를 선택했습니다.**
 
 ## 노지현
 
@@ -95,10 +95,6 @@ SQL 스터디 팀
 
 # 메인 페이지
 
-### 메인 페이지 와이어프레임
-
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4f13170a-a817-4ac5-acbd-f92d5127207f/Untitled.png)
-
 1. 파트 소개 :
 메인 페이지는 크게 3가지로 구성했습니다.
 
@@ -116,12 +112,6 @@ SQL 스터디 팀
 - 기록 클릭 시 해당 기록으로 페이지 이동.
 
 # 일기 작성 페이지
-
-### 일기 작성 페이지 와이어 프레임
-
-![KakaoTalk_20230607_155547361.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1a876853-f569-4003-a902-34cb80236549/KakaoTalk_20230607_155547361.png)
-
-![KakaoTalk_20230607_124653702.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6e159111-1768-4300-bfda-cc8943f6726d/KakaoTalk_20230607_124653702.png)
 
 <파트 별 소개>
 
@@ -146,10 +136,6 @@ SQL 스터디 팀
 
 # 다른 유저 일기 페이지
 
-### 다른유저 일기페이지 와이어 프레임
-
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6ee30fb9-86cf-4cdc-91f9-45662fce8fdc/Untitled.png)
-
 <파트소개>
 
 1. 일기를 보여준다.
@@ -171,18 +157,6 @@ SQL 스터디 팀
 
 # 회원가입 / 로그인 페이지
 
-### 회원가입 /로그인 페이지 와이어 프레임
-
-![KakaoTalk_20230607_124653702_01.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/17bad5d9-fd74-4c30-844b-e3d40507747e/KakaoTalk_20230607_124653702_01.png)
-
-![KakaoTalk_20230607_124653702_02.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/48577e90-e905-444d-9ce4-c904902defb3/KakaoTalk_20230607_124653702_02.png)
-
-![KakaoTalk_20230607_124653702_03.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/70aee4d1-4e2c-4915-a33f-90b891986fc5/KakaoTalk_20230607_124653702_03.png)
-
-![KakaoTalk_20230607_124653702_04.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/007bc80a-7d7d-45b9-adfc-42da76598b20/KakaoTalk_20230607_124653702_04.png)
-
-![KakaoTalk_20230607_124653702_05.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/df3fe3e1-ec49-459e-93e5-01ebd78faee4/KakaoTalk_20230607_124653702_05.png)
-
 <파트소개>
 
 1. 일기 작성페이지에 키워드 노출과 저장
@@ -202,10 +176,6 @@ SQL 스터디 팀
 - 로그아웃으르 선택한 경우 session의 id값을 None으로 변경한다.
 
 # 마이 페이지
-
-### 마이페이지 와이어프레임
-
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bf7667ba-08bb-4c6d-90b3-628f86cb0ddd/Untitled.png)
 
 <마이페이지>
 
