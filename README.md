@@ -1,5 +1,3 @@
-SQL 스터디 팀
-
 # 미니 프로젝트 : 감정일기
 
 https://www.youtube.com/watch?v=5Nxqr1YlTI4
